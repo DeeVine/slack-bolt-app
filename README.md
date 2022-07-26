@@ -1,4 +1,4 @@
-# first-bolt-app
+# slack-bolt-app
 Slack app built with https://slack.dev/bolt-js/reference . This app can post messages to all channels the bot is member of.
 
 Get .env keys from your slack app and add them to .env file, see .env.example
