@@ -3,4 +3,4 @@ Slack app built with https://slack.dev/bolt-js/reference . This app can post mes
 
 Get .env keys from your slack app and add them to .env file, see .env.example
 
-Run app with command 'node app.js' or npm 'run start'
+Run app with command 'node app.js' or 'npm run start'
