@@ -96,7 +96,7 @@ app.command('/postallchannels', async ({ ack, body, client, logger }) => {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: 'Submitting this modal will post your message to all channels the bot is a member of'
+              text: 'Submitting this modal will post your message to all channels the bot is a member of.'
             }
           },
           {
@@ -237,37 +237,6 @@ app.view('post_all_channels', async ({ ack, body, view, client, logger }) => {
 
 });
 
-// Listens to incoming messages that contain "hello"
-app.message('hello', async ({ message, say }) => {
-  // say() sends a message to the channel where the event was triggered
-  await say({
-    blocks: [
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": `Hey there <@${message.user}>!`
-        },
-        "accessory": {
-          "type": "button",
-          "text": {
-            "type": "plain_text",
-            "text": "Click Me"
-          },
-          "action_id": "button_click"
-        }
-      }
-    ],
-    text: `Hey there <@${message.user}>!`
-  });
-});
-
-// app.action('button_click', async ({ body, ack, say }) => {
-//     // Acknowledge the action
-//     await ack();
-//     await say(`<@${body.user.id}> clicked the button`);
-// });
-
 // Find conversation ID using the users.conversations method
 async function findChannels() {
 
@@ -301,7 +270,7 @@ async function publishMessage(id, text) {
       // The token you used to initialize your app
       token: process.env.SLACK_BOT_TOKEN,
       channel: id,
-      text: text
+      text: text,
       // You could also use a blocks[] array to send richer content
     });
 
@@ -314,7 +283,7 @@ async function publishMessage(id, text) {
 }
 
 // Get channels bot is member of, then send a message to all channels
-async function postMessagesToChannels(message){
+async function postMessagesToChannels(message) {
   (async () => {
     return await findChannels()
   })().then(channelIds => {
