@@ -15,8 +15,9 @@ const app = new App({
 (async () => {
   // Start your app
   await app.start();
-
+  
   console.log('⚡️ Bolt app is running!');
+
 })();
 
 //create Home tab view
@@ -50,7 +51,7 @@ app.event('app_home_opened', async ({ event, client, context }) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Available commands:*\n*/postallchannels:* post a message to all channels ths bot is a member of."
+              "text": "*Available commands:*\n*/postallchannels:* post a message to all channels this bot is a member of."
             }
           }
         ]
@@ -66,6 +67,21 @@ app.event('app_home_opened', async ({ event, client, context }) => {
 app.command('/postallchannels', async ({ ack, body, client, logger }) => {
   // Acknowledge the command request
   await ack();
+
+  // check if userid exists in admin channel, if not, decline request
+  const user = body.user_id;
+  console.log('userid is ', body.user_id)
+
+  const adminList = await getAdminMembers();
+
+  if (adminList.includes(user)) {
+    console.log("cool, you're an admin")
+  }
+  else{
+    console.log("sorry, you're not a member")
+    return;
+  }
+
 
   try {
     // Call views.open with the built-in client
@@ -122,10 +138,13 @@ app.view('post_all_channels', async ({ ack, body, view, client, logger }) => {
   await ack();
 
   // Do whatever you want with the input data
-
+  
   // Assume there's an input block with `block_1` as the block_id and `post_message` action_id
   const val = view['state']['values']['block_1']['post_message'];
   const user = body['user']['id'];
+
+  // if user isn't in admin channel then decline submission
+  // console.log('userid', user)
 
   postMessageToChannels(val.value);
 
@@ -190,6 +209,37 @@ async function publishMessage(id, text) {
     console.error(error);
   }
 }
+
+async function getAdminMembers() {
+  try {
+    // Call the conversations.list method using the WebClient
+    const result = await app.client.conversations.list({
+      types: "private_channel, public_channel",
+    });
+
+    const channels = result.channels;
+
+    //get adminChannel object
+    const adminChannel = channels.find( el => el.name === 'darren_admins')
+    console.log('foundobj', adminChannel);
+
+    //get all member ids in adminChannel
+    const adminMembers = await app.client.conversations.members({
+      channel: adminChannel.id,
+    })
+
+    const adminMemberList = adminMembers.members;
+    // console.log('adminMemberListtttt', adminMemberList)
+    
+    return adminMemberList;
+
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+getAdminMembers();
 
 // Get channels bot is member of, then send a message to all channels
 async function postMessageToChannels(message) {
