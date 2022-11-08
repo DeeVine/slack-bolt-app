@@ -6,6 +6,6 @@ Get .env keys from your slack app and add them to .env file, see .env.example
 Run app with command 'node app.js' or 'npm run start'
 
 todo:
-[ ] validate user is in admin channel to submit slash command
-[ ] update app icon
+[x] validate user is in admin channel to submit slash command
+[x] update app icon
 [ ] update modal messaging
