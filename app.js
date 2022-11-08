@@ -3,17 +3,16 @@ require('dotenv').config();
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager')
 
 async function accessSecretVersion (name) {
-  // const client = new SecretManagerServiceClient()
-  // const projectId = process.env.PROJECT_ID
-  // const [version] = await client.accessSecretVersion({
-  //   name: `projects/${projectId}/secrets/${name}/versions/1`
-  // })
+  const client = new SecretManagerServiceClient()
+  const projectId = process.env.PROJECT_ID
+  const [version] = await client.accessSecretVersion({
+    name: `projects/${projectId}/secrets/${name}/versions/1`
+  })
 
-  // // Extract the payload as a string.
-  // const payload = version.payload.data.toString('utf8')
+  // Extract the payload as a string.
+  const payload = version.payload.data.toString('utf8')
 
-  // return payload
-  return name
+  return payload
 }
 
 (async () => {
