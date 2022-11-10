@@ -19,10 +19,10 @@ async function accessSecretVersion (name) {
 
   // Initializes your app with your bot token and signing secret
   const app = new App({
-    token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('slack-bot-token'),
-    signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('slack-signing-secret'),
+    token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
+    signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
     socketMode: true, 
-    appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('slack-app-token'),
+    appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
     // Socket Mode doesn't listen on a port, but in case you want your app to respond to OAuth,
     // you still need to listen on some port!
     // port: process.env.PORT || 3000
