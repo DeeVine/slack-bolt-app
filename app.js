@@ -25,11 +25,11 @@ async function accessSecretVersion (name) {
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
     // Socket Mode doesn't listen on a port, but in case you want your app to respond to OAuth,
     // you still need to listen on some port!
-    port: process.env.PORT || '8080'
+    // port: process.env.PORT || '8080'
   });
 
   // Start your app
-  await app.start();
+  await app.start(process.env.PORT || '8080');
   
   console.log('⚡️ Bolt app is running!');
 
