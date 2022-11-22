@@ -21,18 +21,9 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: true, 
+    socketMode: false, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
-    // Socket Mode doesn't listen on a port, but in case you want your app to respond to OAuth,
-    // you still need to listen on some port!
-    // port: process.env.PORT || '8080'
   });
-
-  // Start your app
-  await app.start(process.env.PORT || '8080');
-  
-  console.log('⚡️ Bolt app is running!');
-
   
   //create Home tab view
   app.event('app_home_opened', async ({ event, client, context }) => {
@@ -82,9 +73,12 @@ async function accessSecretVersion (name) {
     // Acknowledge the command request
     await ack();
 
+    console.log('body',body)
+    console.log('client',client)
+    // console.log('logger',logger)
     // check if userid exists in admin channel, if not, decline request
     const user = body.user_id;
-    console.log('userid is ', body.user_id)
+    // console.log('userid is ', body.user_id)
 
     const adminList = await getAdminMembers();
 
@@ -175,7 +169,7 @@ async function accessSecretVersion (name) {
     catch (error) {
       logger.error(error);
     }
-
+    
   });
 
   // Find all channels the bot is a member of
@@ -234,7 +228,7 @@ async function accessSecretVersion (name) {
 
       //get adminChannel object
       const adminChannel = channels.find( el => el.name === 'darren_admins')
-      console.log('foundobj', adminChannel);
+      // console.log('foundobj', adminChannel);
 
       //get all member ids in adminChannel
       const adminMembers = await app.client.conversations.members({
@@ -252,8 +246,6 @@ async function accessSecretVersion (name) {
     }
   }
 
-  getAdminMembers();
-
   // Get channels bot is member of, then send a message to all channels
   async function postMessageToChannels(message) {
     (async () => {
@@ -265,5 +257,10 @@ async function accessSecretVersion (name) {
       })
     })
   }
+
+  // Start your app
+  await app.start(process.env.PORT || '8080');
+
+  console.log('⚡️ Bolt app is running!');
 
 })();
