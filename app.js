@@ -176,7 +176,8 @@ async function accessSecretVersion (name) {
       // Call the conversations.list method using the built-in WebClient
       const result = await app.client.users.conversations({
         // The token you used to initialize your app
-        token: process.env.SLACK_BOT_TOKEN
+        token: process.env.SLACK_BOT_TOKEN,
+        types: "public_channel,private_channel"
       });
       
       //generate list of channelIds
@@ -216,7 +217,7 @@ async function accessSecretVersion (name) {
     try {
       // Call the conversations.list method using the WebClient
       const result = await app.client.conversations.list({
-        types: "private_channel",
+        types: "private_channel,public_channel",
       });
 
       const channels = result.channels;

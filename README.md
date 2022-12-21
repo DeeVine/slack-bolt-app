@@ -18,4 +18,4 @@ todo:
 [ ] plan for how to run & maintain bot on multiple workspaces
 
 
-
+[ ] Bot will only post to channels that the bot and user are a member of.
