@@ -21,7 +21,7 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: false, 
+    socketMode: true, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
   });
   
@@ -76,6 +76,7 @@ async function accessSecretVersion (name) {
     const user = body.user_id;
 
     const adminList = await getAdminMembers();
+    console.log('adminList',adminList)
 
     //check if user is in admin channel before posting
     if (adminList.includes(user)) {
@@ -217,13 +218,16 @@ async function accessSecretVersion (name) {
     try {
       // Call the conversations.list method using the WebClient
       const result = await app.client.conversations.list({
-        types: "private_channel,public_channel",
+        types: "private_channel",
+        limit: "9999"
       });
 
       const channels = result.channels;
+      console.log("getAdminMembers Channels", channels)
 
       //get adminChannel object
       const adminChannel = channels.find( el => el.name === 'bot_admins')
+      console.log("adminChannel", adminChannel)
 
       //get all member ids in adminChannel
       const adminMembers = await app.client.conversations.members({
