@@ -6,7 +6,7 @@ async function accessSecretVersion (name) {
   const client = new SecretManagerServiceClient()
   const projectId = process.env.PROJECT_ID
   const [version] = await client.accessSecretVersion({
-    name: `projects/${projectId}/secrets/${name}/versions/1`
+    name: `projects/${projectId}/secrets/${name}/versions/latest`
   })
 
   // Extract the payload as a string.

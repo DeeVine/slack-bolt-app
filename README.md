@@ -9,3 +9,13 @@ todo:
 [x] validate user is in admin channel to submit slash command
 [x] update app icon
 [ ] update modal messaging
+[ ] change admin channel name
+[ ] create app for Sentry workspace
+    [ ] test another app with diff secrets, then setup Sentry workspace
+    [ ] set up new secrets in google cloud
+    [ ]
+[ ] look up method to auto add bot to new channels
+[ ] plan for how to run & maintain bot on multiple workspaces
+
+
+
