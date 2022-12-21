@@ -18,4 +18,4 @@ todo:
 [ ] plan for how to run & maintain bot on multiple workspaces
 
 
-[ ] Bot will only post to channels that the bot and user are a member of.
+[ ] Bot will only post to channels that the bot and user are a member of. So in order to post to every private channel, the current user invoking /postallchannels must also be a member of all private channels.
