@@ -5,17 +5,14 @@ Get .env keys from your slack app and add them to .env file, see .env.example
 
 Run app with command 'node app.js' or 'npm run start'
 
-todo:
-[x] validate user is in admin channel to submit slash command
-[x] update app icon
-[ ] update modal messaging
-[ ] change admin channel name
-[ ] create app for Sentry workspace
-    [ ] test another app with diff secrets, then setup Sentry workspace
-    [ ] set up new secrets in google cloud
-    [ ]
-[ ] look up method to auto add bot to new channels
-[ ] plan for how to run & maintain bot on multiple workspaces
+<b>Current functionality:</b>
+- Users in "bot_admins" channel can use the slash command /postallchannels to send a message to all channels that both the user and app are a member of.
+- To clarify, only “master” admins who are in every private channel would be able to post to all channels at once. All other admins would only be able to post to channels they are a member of.
 
 
-[ ] Bot will only post to channels that the bot and user are a member of. So in order to post to every private channel, the current user invoking /postallchannels must also be a member of all private channels.
+<b>In progress:</b>
+- [x] validate user is in admin channel to submit slash command
+- [ ] look up method to auto add app to new channels
+- [ ] plan for how to run & maintain bot on multiple workspaces, probably need build scripts in cloud run
+- [ ] Look into possibility of deleting a message posted by the app
+- [ ] Look into unfurling images/links
