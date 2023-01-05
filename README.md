@@ -12,7 +12,8 @@ Run app with command 'node app.js' or 'npm run start'
 
 <b>In progress:</b>
 - [x] validate user is in admin channel to submit slash command
-- [ ] look up method to auto add app to new channels
+- [ ] look up way to auto add app to new channels
 - [ ] plan for how to run & maintain bot on multiple workspaces, probably need build scripts in cloud run
 - [ ] Look into possibility of deleting a message posted by the app
+    - [ ] If cannot delete messages, then maybe a seperate preview/test option before sending the message
 - [ ] Look into unfurling images/links
