@@ -21,7 +21,7 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: false, 
+    socketMode: true, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
   });
   
@@ -74,15 +74,11 @@ async function accessSecretVersion (name) {
 
     // check if userid exists in admin channel, if not, decline request
     const user = body.user_id;
-
     const adminList = await getAdminMembers();
-    console.log('adminList',adminList)
 
     //check if user is in admin channel before posting
-    if (adminList.includes(user)) {
-      console.log("cool, you're an admin")
-    }
-    else{
+    if (adminList.includes(user)) { console.log("cool, you're an admin") }
+    else {
       console.log("sorry, you're not an admin")
       return;
     }
@@ -168,7 +164,41 @@ async function accessSecretVersion (name) {
     
   });
 
-  // Find all channels the bot is a member of
+  app.command('/getallchannels', async ({ ack, body, client, logger }) => {
+    // Acknowledge the command request
+    await ack();
+
+    // check if userid exists in admin channel, if not, decline request
+    const user = body.user_id;
+    const adminList = await getAdminMembers();
+    //check if user is in admin channel before posting
+    if (adminList.includes(user)) { console.log("cool, you're an admin") }
+    else { 
+      console.log("sorry, you're not an admin")
+      return;
+    }
+
+    try {
+      const allChannelNames = await findAllChannelNames()
+      let channelNamesList = ''
+
+      for (const channel of allChannelNames) {        
+        channelNamesList = channelNamesList.concat(channel,', ')
+      }
+      console.log('channelNamesList', channelNamesList)
+
+      // Message the user (bot user in this case)
+      await client.chat.postMessage({
+        channel: user,
+        text: channelNamesList
+      });
+    }
+    catch (error) {
+      logger.error(error);
+    }
+  });
+
+  // Find all channel IDs the bot is a member of (channel names can change, but IDs should remain the same)
   async function findChannels() {
 
     const channelIds = [];
@@ -191,6 +221,33 @@ async function accessSecretVersion (name) {
     }
     
     return channelIds;
+    
+  }
+
+   // Find all channel names the bot is a member of (channel names can change, but IDs should remain the same)
+   async function findAllChannelNames() {
+
+    const channelNames = [];
+    
+    try {
+      // Call the conversations.list method using the built-in WebClient
+      const result = await app.client.users.conversations({
+        // The token you used to initialize your app
+        token: process.env.SLACK_BOT_TOKEN,
+        types: "public_channel,private_channel"
+      });
+      
+      //generate list of channelNames
+      for (const channel of result.channels) {
+        // console.log ("channel", channel)
+        channelNames.push(channel.name);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+    
+    return channelNames;
     
   }
     
@@ -249,7 +306,6 @@ async function accessSecretVersion (name) {
     (async () => {
       return await findChannels()
     })().then(channelIds => {
-      console.log('all channelIds', channelIds)
       channelIds.map(id => {
         publishMessage(id, message);
       })
