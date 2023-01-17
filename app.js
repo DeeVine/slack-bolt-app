@@ -21,7 +21,7 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: false, 
+    socketMode: true, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
   });
   
@@ -144,18 +144,27 @@ async function accessSecretVersion (name) {
     const user = body['user']['id'];
 
     // if user isn't in admin channel then decline submission
-
+    console.log('val.value', val.value)
     postMessageToChannels(val.value);
 
     // Message to send user
     let msg = '';
-
-    msg = `I posted your message: ${val.value}`;
+    blocks: [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": msg
+        }
+      }
+  ]
+    msg = `I posted your message: \n` + val.value;
     // Message the user
     try {
       await client.chat.postMessage({
         channel: user,
-        text: msg
+        type:"mrkdwn",
+        text: msg,
       });
     }
     catch (error) {
@@ -185,7 +194,6 @@ async function accessSecretVersion (name) {
       for (const channel of allChannelNames) {        
         channelNamesList = channelNamesList.concat(channel,', ')
       }
-      console.log('channelNamesList', channelNamesList)
 
       // Message the user (bot user in this case)
       await client.chat.postMessage({
@@ -239,7 +247,6 @@ async function accessSecretVersion (name) {
       
       //generate list of channelNames
       for (const channel of result.channels) {
-        // console.log ("channel", channel)
         channelNames.push(channel.name);
       }
     }
@@ -259,7 +266,8 @@ async function accessSecretVersion (name) {
         // The token you used to initialize your app
         token: process.env.SLACK_BOT_TOKEN,
         channel: id,
-        text: text,
+        type:"mrkdwn",
+        text: text
         // You could also use a blocks[] array to send richer content
       });
 
