@@ -144,20 +144,10 @@ async function accessSecretVersion (name) {
     const user = body['user']['id'];
 
     // if user isn't in admin channel then decline submission
-    console.log('val.value', val.value)
     postMessageToChannels(val.value);
 
     // Message to send user
     let msg = '';
-    blocks: [
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": msg
-        }
-      }
-  ]
     msg = `I posted your message: \n` + val.value;
     // Message the user
     try {
@@ -266,6 +256,7 @@ async function accessSecretVersion (name) {
         // The token you used to initialize your app
         token: process.env.SLACK_BOT_TOKEN,
         channel: id,
+        reply_broadcast: true,
         type:"mrkdwn",
         text: text
         // You could also use a blocks[] array to send richer content
@@ -288,7 +279,6 @@ async function accessSecretVersion (name) {
       });
 
       const channels = result.channels;
-      console.log("getAdminMembers Channels", channels)
 
       //get adminChannel object
       const adminChannel = channels.find( el => el.name === 'bot_admins')
