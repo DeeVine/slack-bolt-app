@@ -21,7 +21,7 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: false, 
+    socketMode: true, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
   });
   
@@ -155,6 +155,8 @@ async function accessSecretVersion (name) {
         channel: user,
         type:"mrkdwn",
         text: msg,
+        unfurl_links: false,
+        unfurl_media: false
       });
     }
     catch (error) {
@@ -258,7 +260,9 @@ async function accessSecretVersion (name) {
         channel: id,
         reply_broadcast: true,
         type:"mrkdwn",
-        text: text
+        text: text,
+        unfurl_links: false,
+        unfurl_media: false
         // You could also use a blocks[] array to send richer content
       });
 
