@@ -21,7 +21,7 @@ async function accessSecretVersion (name) {
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN || await accessSecretVersion('SLACK_BOT_TOKEN'),
     signingSecret: process.env.SLACK_SIGNING_SECRET || await accessSecretVersion('SLACK_SIGNING_SECRET'),
-    socketMode: true, 
+    socketMode: false, 
     appToken: process.env.SLACK_APP_TOKEN || await accessSecretVersion('SLACK_APP_TOKEN'),
   });
   
