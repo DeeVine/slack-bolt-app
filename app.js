@@ -165,6 +165,101 @@ async function accessSecretVersion (name) {
     
   });
 
+    // Listen for a slash command invocation
+    app.command('/testpost', async ({ ack, body, client, logger }) => {
+      // Acknowledge the command request
+      await ack();
+  
+      // check if userid exists in admin channel, if not, decline request
+      const user = body.user_id;
+      const adminList = await getAdminMembers();
+  
+      //check if user is in admin channel before posting
+      if (adminList.includes(user)) { console.log("cool, you're an admin") }
+      else {
+        console.log("sorry, you're not an admin")
+        return;
+      }
+  
+      try {
+        // Call views.open with the built-in client
+        const result = await client.views.open({
+          // Pass a valid trigger_id within 3 seconds of receiving it
+          trigger_id: body.trigger_id,
+          // View payload
+          view: {
+            type: 'modal',
+            // View identifier
+            callback_id: 'test_post',
+            title: {
+              type: 'plain_text',
+              text: 'Post to all bot_admins'
+            },
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: 'Submitting this modal will post your message to all channels the bot is a member of.'
+                }
+              },
+              {
+                type: 'input',
+                block_id: 'block_1',
+                label: {
+                  type: 'plain_text',
+                  text: 'What is your message?'
+                },
+                element: {
+                  type: 'plain_text_input',
+                  action_id: 'post_message',
+                  multiline: true
+                }
+              }
+            ],
+            submit: {
+              type: 'plain_text',
+              text: 'Submit'
+            }
+          }
+        });
+        logger.info(result);
+      }
+      catch (error) {
+        logger.error(error);
+      }
+    });
+  
+    // Handle view_submission request for when someone submits modal 'post_all_channels'
+    app.view('test_post', async ({ ack, body, view, client, logger }) => {
+      // Acknowledge the view_submission request
+      await ack();
+  
+      // Do whatever you want with the input data
+      
+      // Assume there's an input block with `block_1` as the block_id and `post_message` action_id
+      const val = view['state']['values']['block_1']['post_message'];
+      const user = body['user']['id'];
+  
+      // Message to send user
+      let msg = '';
+      msg = `This is a test post: \n` + val.value;
+      // Message the user
+      try {
+        await client.chat.postMessage({
+          channel: "bot_admins",
+          type:"mrkdwn",
+          text: msg,
+          unfurl_links: false,
+          unfurl_media: false
+        });
+      }
+      catch (error) {
+        logger.error(error);
+      }
+      
+    });
+
   app.command('/getallchannels', async ({ ack, body, client, logger }) => {
     // Acknowledge the command request
     await ack();
